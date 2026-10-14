@@ -1,0 +1,3 @@
+Custo do pai: 1036.652721
+Custo dos filhos: 861.304004
+Decisão: dividir

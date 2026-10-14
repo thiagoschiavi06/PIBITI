@@ -15,3 +15,26 @@ __pycache__/
 # Arquivos temporarios
 *.log
 .DS_Store
+
+# Backup do ambiente virtual
+venv-backup/
+
+# Audios originais e processados
+data/audios/
+data/processados/
+
+# Audios gerados nos experimentos
+results/*.wav
+results/subbandas_db4_l4/
+
+# Arquivos temporarios do LaTeX
+*.aux
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Arquivos locais de teste
+src/*.wav
+src/*.zip
