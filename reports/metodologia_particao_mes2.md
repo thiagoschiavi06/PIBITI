@@ -78,3 +78,39 @@ conteúdo de áudio duplicado entre as partições.
 - Confirmar com o orientador o protocolo adotado.
 - Consolidar o fichamento teórico da WPT.
 - Validar a decomposição e reconstrução WPT.
+
+## Validacao completa dos identificadores de locutores
+
+Foi realizada a leitura da coluna `audio.path` dos 40 arquivos
+Parquet da classe bonafide do BRSpeech-DF.
+
+Resultados:
+
+| Particao | Audios analisados | Identificadores distintos |
+|---|---:|---:|
+| Treino | 74.163 | 42 |
+| Validacao | 1.161 | 10 |
+| Teste | 1.320 | 10 |
+| Total | 76.644 | 62 |
+
+Nao foram encontrados nomes ausentes nem identificadores
+repetidos entre treino, validacao e teste.
+
+O identificador foi extraido do prefixo anterior ao primeiro
+caractere `_` presente em `audio.path`.
+
+Essa verificacao fornece evidencia de separacao dos identificadores
+dos arquivos reais entre as particoes oficiais.
+
+Limitacoes:
+- A interpretacao do prefixo como identificador de locutor depende
+  da convencao de nomenclatura do corpus original.
+- Os registros sinteticos nao foram verificados individualmente
+  quanto a identidade do locutor.
+- O subconjunto piloto de 600 audios permanece exploratorio,
+  sem garantia de diversidade suficiente para avaliar generalizacao.
+
+Arquivos de reproducao:
+- `src/19_validar_locutores_completo.py`
+- `results/validacao_locutores_completa.txt`
+- `results/locutores_por_particao.csv`

@@ -1,0 +1,34 @@
+VALIDACAO DE IDENTIFICADORES - BRSpeech-DF
+
+PARTICAO: train
+Audios analisados: 74163
+Nomes ausentes: 0
+Identificadores distintos: 42
+IDs: 10107, 10199, 10250, 10296, 10670, 12249, 12428, 12865, 13196, 2959, 2961, 3037, 3369, 3427, 3718, 3814, 3976, 4000, 4341, 4367, 4778, 4783, 4801, 5025, 5068, 5103, 533, 5677, 5705, 5888, 6187, 6207, 6581, 6601, 6700, 7028, 7407, 8680, 9217, 9351, 9485, 9958
+
+PARTICAO: validation
+Audios analisados: 1161
+Nomes ausentes: 0
+Identificadores distintos: 10
+IDs: 11995, 12707, 12710, 13069, 4067, 5417, 6549, 6566, 8655, 9056
+
+PARTICAO: test
+Audios analisados: 1320
+Nomes ausentes: 0
+Identificadores distintos: 10
+IDs: 11247, 12114, 12287, 12626, 12670, 13063, 3050, 4405, 5739, 7925
+
+SOBREPOSICAO ENTRE PARTICOES
+
+train x validation: []
+train x test: []
+validation x test: []
+
+RESULTADO
+Nenhuma sobreposicao de identificadores encontrada.
+
+OBSERVACOES:
+- Verificacao restrita aos registros bonafide.
+- O prefixo do nome foi utilizado como identificador presumido.
+- A correspondencia com locutores deve seguir a documentacao original.
+- Audios sinteticos nao foram verificados por locutor.

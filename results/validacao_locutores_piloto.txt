@@ -1,0 +1,25 @@
+
+=== TRAIN ===
+Áudios analisados: 100
+Locutores identificados: 1
+IDs: ['10107']
+
+=== VALIDATION ===
+Áudios analisados: 100
+Locutores identificados: 1
+IDs: ['11995']
+
+=== TEST ===
+Áudios analisados: 100
+Locutores identificados: 2
+IDs: ['11247', '12114']
+
+=== VERIFICAÇÃO DE SOBREPOSIÇÃO ===
+train x validation: []
+train x test: []
+validation x test: []
+
+=== RESULTADO ===
+Nenhum identificador repetido na amostra real.
+A separação oficial é descrita no artigo.
+A amostra sintética não possui IDs explícitos.
