@@ -56,21 +56,33 @@ duplicados no CSV consolidado.
 Foi gerado um hash SHA-256 para o arquivo
 subconjunto_piloto_600.csv.
 
-## 7. Limitações
+## 7. Limitações e validação dos locutores
 
-Os arquivos Parquet consultados não apresentam
-identificadores explícitos de locutores.
+A análise dos 40 arquivos Parquet da classe bona fide
+abrangeu 76.644 áudios reais do BRSpeech-DF.
 
-Portanto, ainda não foi possível comprovar a
-ausência de speaker leakage entre treino,
-validação e teste.
+Foram identificados 62 prefixos distintos:
+- Treino: 42 identificadores.
+- Validação: 10 identificadores.
+- Teste: 10 identificadores.
 
-O subconjunto deve ser considerado piloto,
-e não uma partição definitivamente validada
-por locutor.
+Não foi encontrada sobreposição de identificadores
+entre as três partições.
 
-Também não foi demonstrada a ausência de
-conteúdo de áudio duplicado entre as partições.
+Os identificadores foram extraídos dos nomes dos arquivos
+disponíveis em `audio.path`. A interpretação desses prefixos
+como identificadores de locutores depende da convenção
+de nomenclatura do corpus original.
+
+A identidade dos locutores dos áudios sintéticos ainda
+não foi verificada diretamente.
+
+O subconjunto piloto de 600 áudios permanece exploratório,
+pois foi selecionado de forma determinística, sem amostragem
+aleatória e sem garantia de diversidade suficiente.
+
+Também não foi verificada a ausência de conteúdo de áudio
+duplicado entre as partições.
 
 ## 8. Próximas atividades
 

@@ -38,3 +38,4 @@ results/subbandas_db4_l4/
 # Arquivos locais de teste
 src/*.wav
 src/*.zip
+*.bak
