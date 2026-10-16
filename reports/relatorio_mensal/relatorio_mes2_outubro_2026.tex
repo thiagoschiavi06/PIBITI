@@ -1,0 +1,96 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{booktabs,tabularx,array}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\geometry{left=2.6cm,right=2.6cm,top=2.5cm,bottom=2.5cm}
+\hypersetup{colorlinks=true,urlcolor=blue!50!black,linkcolor=black,pdftitle={Relatorio mensal PIBITI - Outubro 2026}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist[itemize]{leftmargin=*,topsep=3pt,itemsep=2pt}
+\newcommand{\subtitulo}[1]{\vspace{4pt}{\large\bfseries #1}\par\vspace{2pt}}
+\begin{document}
+\begin{center}
+{\small FATEC OURINHOS}\par
+\vspace{0.4cm}
+{\Large\bfseries Relatório Mensal de Atividades}\par
+\vspace{0.18cm}
+{\large PIBITI --- Outubro de 2026 (Mês 2)}\par
+\vspace{0.6cm}
+\end{center}
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\textbf{Pesquisador:} & Thiago Mateus Schiavi\\
+\textbf{Instituição:} & Fatec Ourinhos\\
+\textbf{Projeto:} & Detecção de deepfakes de áudio em português brasileiro com transformada Wavelet Packet (WPT)\\
+\textbf{Período:} & Outubro de 2026\\
+\textbf{Natureza:} & Relatório de acompanhamento para revisão do orientador\\
+\end{tabularx}
+\vspace{0.35cm}
+\section{Objetivo do período}
+Conforme o plano de atividades, o segundo mês concentra-se na verificação ou estabelecimento do protocolo de partição dos corpora, no aprofundamento teórico da transformada Wavelet Packet (WPT) e na delimitação de um subconjunto balanceado viável para processamento em CPU. A entrega planejada é a documentação da partição e um fichamento teórico consolidado da WPT.
+\section{Atividades desenvolvidas}
+\subtitulo{2.1 Inventário e preparação do corpus}
+Foi utilizado o corpus \textbf{BRSpeech-DF}, disponível no Hugging Face. A partir das partições oficiais de treino, validação e teste, preparou-se um \textbf{subconjunto piloto de 600 arquivos}, sendo 300 gravações reais (\emph{bona fide}) e 300 sintéticas (\emph{spoof}). Os registros foram selecionados de forma determinística a partir do primeiro grupo de linhas do primeiro arquivo Parquet de cada classe e partição. Portanto, a amostra é balanceada por classe, mas não aleatória nem representativa de toda a diversidade do corpus.
+
+\begin{center}
+\begin{tabular}{lrrr}\toprule
+\textbf{Partição} & \textbf{Reais} & \textbf{Sintéticos} & \textbf{Total}\\\midrule
+Treino & 100 & 100 & 200\\
+Validação & 100 & 100 & 200\\
+Teste & 100 & 100 & 200\\\midrule
+\textbf{Total} & \textbf{300} & \textbf{300} & \textbf{600}\\\bottomrule
+\end{tabular}
+\end{center}
+Os arquivos piloto foram convertidos para \textbf{WAV, mono, 16 kHz, PCM de 16 bits}, com preservação dos originais. Foram verificados existência, formato, taxa de amostragem e canais, além da ausência de caminhos duplicados no CSV consolidado. Também foi gerado um hash SHA-256 do arquivo de metadados consolidado.
+\subtitulo{2.2 Verificação de identificadores nas partições oficiais}
+Foram examinados os caminhos \texttt{audio.path} de \textbf{40 arquivos Parquet de gravações reais}, abrangendo 76.644 registros. O prefixo anterior ao primeiro sublinhado do nome do arquivo foi usado como \emph{identificador presumido de locutor}. Foram obtidos os resultados a seguir:
+
+\begin{center}
+\begin{tabular}{lrr}\toprule
+\textbf{Partição} & \textbf{Registros reais} & \textbf{IDs distintos}\\\midrule
+Treino & 74.163 & 42\\
+Validação & 1.161 & 10\\
+Teste & 1.320 & 10\\\midrule
+\textbf{Total} & \textbf{76.644} & \textbf{62}\\\bottomrule
+\end{tabular}
+\end{center}
+Não foram encontrados caminhos ausentes nem sobreposição dos identificadores entre as três partições. Este resultado sustenta a separação dos \emph{prefixos dos nomes dos arquivos reais}; entretanto, a interpretação desses prefixos como locutores depende da convenção documental do corpus. A identidade dos locutores nos áudios sintéticos \textbf{não foi verificada diretamente}.
+\subtitulo{2.3 Estudo teórico e ensaios de WPT}
+Foram estudadas as decomposições WPT com níveis $L=4$ (16 sub-bandas) e $L=5$ (32 sub-bandas), usando as wavelets-mãe \texttt{db4}, \texttt{db8} e \texttt{sym8}. Em ensaio com um áudio real, a decomposição \texttt{db4}, nível 4, permitiu reconstruir um sinal de 127.275 amostras com erro quadrático médio de aproximadamente $2{,}6771\times10^{-34}$. A soma das 16 sub-bandas reconstruídas individualmente também recuperou o sinal, com erro próximo à precisão numérica.
+
+Os tempos medidos em um único áudio variaram de aproximadamente \textbf{5,35 ms a 7,78 ms} nas seis combinações analisadas, apenas como referência exploratória, sem interpretação de benchmark. Foi calculada a entropia de Shannon da distribuição de energia normalizada em sub-bandas e realizada uma comparação inicial entre \textbf{um áudio real e um sintético}. Nesse par, o áudio real apresentou maior entropia em 15 das 16 sub-bandas. O achado não permite inferir desempenho de classificação.
+
+Também foi experimentada uma decisão \emph{local} de divisão por custo entrópico, comparando um nó pai a seus filhos, sem implementar ainda o algoritmo completo de seleção da melhor base.
+\section{Produções do período}
+\begin{itemize}
+\item Fichamento WPT revisado, com fundamentação, resultados experimentais, gráficos e limitações (PDF e arquivo-fonte LaTeX).
+\item Relatório da metodologia de partição, incluindo as verificações dos identificadores reais.
+\item Scripts reprodutíveis de inventário, conversão, análise WPT, entropia e verificação dos identificadores; tabelas e resultados textuais versionados no GitHub.
+\item Repositório do projeto: \url{https://github.com/thiagoschiavi06/PIBITI}.
+\end{itemize}
+\section{Limitações e pontos para orientação}
+\begin{itemize}
+\item O piloto foi obtido dos primeiros registros dos Parquets e tem diversidade reduzida: a parte real do treino inclui apenas um identificador no recorte de 100 registros analisados anteriormente.
+\item A ausência de sobreposição foi verificada diretamente apenas para os identificadores extraídos dos nomes \emph{bona fide}; o vínculo entre locutores reais e áudios sintéticos requer investigação adicional.
+\item Não houve verificação de duplicidade de conteúdo de áudio entre partições; ausência de caminhos iguais não equivale a ausência de conteúdo duplicado.
+\item Comparações de entropia entre classes e tempos de execução são preliminares, baseadas em poucos exemplos/execuções.
+\item A adoção formal de uma partição congelada para futuros modelos e a eventual ampliação estratificada do piloto devem ser discutidas com o orientador.
+\end{itemize}
+\section{Encaminhamentos para novembro (Mês 3)}
+Revisar o protocolo experimental e a literatura, selecionar um subconjunto mais diversificado mantendo as partições oficiais, aprofundar ensaios de decomposição/reconstrução WPT em CPU e estruturar a extração de características por sub-banda. Só após a aprovação do protocolo de avaliação serão propostas comparações de desempenho de detecção.
+\section{Síntese}
+O período resultou na preparação de uma base piloto balanceada, na verificação abrangente dos identificadores de arquivos reais e na consolidação inicial da teoria e dos ensaios de WPT. A documentação é reprodutível e está versionada, mas a avaliação de generalização de um detector e a garantia de separação dos locutores sintéticos permanecem pendentes.
+\section*{Materiais utilizados}
+\begin{itemize}
+\item Plano de Atividades PIBITI 2026--2027, seção \emph{Mês 2 --- Partição + teoria WPT}.
+\item \emph{Fichamento Teórico e Experimental --- WPT}, versão de outubro de 2026.
+\item \emph{Metodologia da Partição dos Dados} e resultados dos scripts de validação de identificadores, outubro de 2026.
+\item Corpus: \url{https://huggingface.co/datasets/AKCIT-Deepfake/BRSpeech-DF}.
+\end{itemize}
+\end{document}
