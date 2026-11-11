@@ -117,6 +117,7 @@ python -c "import numpy, pandas, scipy, soundfile, pywt, matplotlib, pyarrow, hu
 | `20_inventario_modelos_sintese.py` | Inventário e contagem dos modelos de síntese nos 288 Parquets spoof |
 | `21_extrair_features_wpt.py` | Extração em lote de 64 características WPT (janela 4s, 522 áudios) |
 | `22_graficos_features_wpt.py` | Geração de gráficos de medianas e consolidação de resumo por partição |
+| `23_validar_reconstrucao_sintetica.py` | Bateria exaustiva de validação da reconstrução WPT com sinais sintéticos |
 
 Exemplos com áudios já preparados localmente:
 
