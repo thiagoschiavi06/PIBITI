@@ -1,0 +1,22 @@
+{
+    "sampling_rate_hz": 16000,
+    "wavelet_mother": "db4",
+    "decomposition_level": 4,
+    "padding_mode": "symmetric",
+    "subband_order": "freq",
+    "subbands_count": 16,
+    "bandwidth_hz": 500.0,
+    "window_duration_seconds": 4.0,
+    "window_samples": 64000,
+    "descriptors_per_subband": [
+        "energia",
+        "rms",
+        "zcr",
+        "env_media",
+        "env_desvio",
+        "env_curtose"
+    ],
+    "descriptors_count_per_subband": 6,
+    "total_feature_dimensions": 96,
+    "implementation_reference": "mes04_descritores_iniciais.pdf"
+}

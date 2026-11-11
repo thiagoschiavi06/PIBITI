@@ -119,6 +119,8 @@ python -c "import numpy, pandas, scipy, soundfile, pywt, matplotlib, pyarrow, hu
 | `22_graficos_features_wpt.py` | Geração de gráficos de medianas e consolidação de resumo por partição |
 | `23_validar_reconstrucao_sintetica.py` | Bateria exaustiva de validação da reconstrução WPT com sinais sintéticos |
 | `24_validar_reconstrucao_audios_reais.py` | Validação da reconstrução WPT e custo em CPU com áudios de fala do piloto |
+| `25_calibrar_nivel_wavelet.py` | Calibração sistemática de nível (L=3,4,5) e wavelets (db4, db8, sym8) |
+| `26_extrair_descritores_iniciais.py` | Extração dos primeiros 96 descritores (6 por sub-banda WPT) e contraste |
 
 Exemplos com áudios já preparados localmente:
 

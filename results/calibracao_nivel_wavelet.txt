@@ -1,0 +1,31 @@
+CALIBRAÇÃO DE NÍVEL DE DECOMPOSIÇÃO E WAVELET-MÃE (MÊS 4)
+Data: 2026-11-11 08:31:58
+Frequência de amostragem: 16000 Hz
+Modo de extensão: symmetric
+===========================================================================
+
+TIPO DE SINAL: Sintético (Senoide 1kHz + Ruído)
+Amostras: 16000
+---------------------------------------------------------------------------
+Wavelet: db4   | L=3 | Sub-bandas:  8 ( 1000 Hz cada) | Tam. Nó: 2006 | CPU:  0.57 ms | MSE: 4.38e-32 | Equiv: True
+Wavelet: db4   | L=4 | Sub-bandas: 16 (  500 Hz cada) | Tam. Nó: 1006 | CPU:  0.52 ms | MSE: 6.74e-32 | Equiv: True
+Wavelet: db4   | L=5 | Sub-bandas: 32 (  250 Hz cada) | Tam. Nó:  506 | CPU:  0.47 ms | MSE: 9.25e-32 | Equiv: True
+Wavelet: db8   | L=3 | Sub-bandas:  8 ( 1000 Hz cada) | Tam. Nó: 2013 | CPU:  0.27 ms | MSE: 6.85e-32 | Equiv: True
+Wavelet: db8   | L=4 | Sub-bandas: 16 (  500 Hz cada) | Tam. Nó: 1014 | CPU:  0.39 ms | MSE: 1.00e-31 | Equiv: True
+Wavelet: db8   | L=5 | Sub-bandas: 32 (  250 Hz cada) | Tam. Nó:  514 | CPU:  0.51 ms | MSE: 1.25e-31 | Equiv: True
+Wavelet: sym8  | L=3 | Sub-bandas:  8 ( 1000 Hz cada) | Tam. Nó: 2013 | CPU:  0.24 ms | MSE: 2.28e-27 | Equiv: True
+Wavelet: sym8  | L=4 | Sub-bandas: 16 (  500 Hz cada) | Tam. Nó: 1014 | CPU:  0.32 ms | MSE: 2.89e-27 | Equiv: True
+Wavelet: sym8  | L=5 | Sub-bandas: 32 (  250 Hz cada) | Tam. Nó:  514 | CPU:  0.63 ms | MSE: 3.52e-27 | Equiv: True
+
+TIPO DE SINAL: Áudio Real (Fala Bonafide 1s)
+Amostras: 16000
+---------------------------------------------------------------------------
+Wavelet: db4   | L=3 | Sub-bandas:  8 ( 1000 Hz cada) | Tam. Nó: 2006 | CPU:  0.16 ms | MSE: 2.65e-34 | Equiv: True
+Wavelet: db4   | L=4 | Sub-bandas: 16 (  500 Hz cada) | Tam. Nó: 1006 | CPU:  0.28 ms | MSE: 3.72e-34 | Equiv: True
+Wavelet: db4   | L=5 | Sub-bandas: 32 (  250 Hz cada) | Tam. Nó:  506 | CPU:  0.50 ms | MSE: 5.44e-34 | Equiv: True
+Wavelet: db8   | L=3 | Sub-bandas:  8 ( 1000 Hz cada) | Tam. Nó: 2013 | CPU:  0.37 ms | MSE: 3.99e-34 | Equiv: True
+Wavelet: db8   | L=4 | Sub-bandas: 16 (  500 Hz cada) | Tam. Nó: 1014 | CPU:  0.51 ms | MSE: 6.27e-34 | Equiv: True
+Wavelet: db8   | L=5 | Sub-bandas: 32 (  250 Hz cada) | Tam. Nó:  514 | CPU:  0.61 ms | MSE: 8.80e-34 | Equiv: True
+Wavelet: sym8  | L=3 | Sub-bandas:  8 ( 1000 Hz cada) | Tam. Nó: 2013 | CPU:  0.44 ms | MSE: 3.93e-28 | Equiv: True
+Wavelet: sym8  | L=4 | Sub-bandas: 16 (  500 Hz cada) | Tam. Nó: 1014 | CPU:  0.80 ms | MSE: 7.13e-28 | Equiv: True
+Wavelet: sym8  | L=5 | Sub-bandas: 32 (  250 Hz cada) | Tam. Nó:  514 | CPU:  0.91 ms | MSE: 1.22e-27 | Equiv: True

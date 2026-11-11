@@ -1,0 +1,24 @@
+DESAFIO DO MÊS 4 — CONTRASTE DE DESCRITORES: BONAFIDE VS SPOOF
+Data: 2026-11-11 08:32:58
+Dimensões do vetor: 96 características (16 sub-bandas x 6 descritores)
+Amostra piloto analisada: 20 áudios (10 bonafide, 10 spoof F5-TTS)
+Tempo total de extração em CPU: 3398.59 ms (169.93 ms por áudio)
+===========================================================================
+
+TOP 15 CARACTERÍSTICAS COM MAIOR CONTRASTE RELATIVO (|BF - SP| / Média):
+---------------------------------------------------------------------------
+01. b00_aaaa_env_curtose             | Contraste:   1.0366 | Bona fide:   1.0047e+00 | Spoof:   3.1667e+00
+02. b15_daaa_energia                 | Contraste:   1.0324 | Bona fide:   4.3911e-02 | Spoof:   1.3762e-01
+03. b14_daad_energia                 | Contraste:   0.7980 | Bona fide:   1.0334e-01 | Spoof:   2.4055e-01
+04. b05_addd_energia                 | Contraste:   0.7043 | Bona fide:   4.8962e-01 | Spoof:   1.0219e+00
+05. b06_adad_energia                 | Contraste:   0.7008 | Bona fide:   4.9050e-01 | Spoof:   1.0196e+00
+06. b02_aadd_energia                 | Contraste:   0.6798 | Bona fide:   5.8666e+00 | Spoof:   1.1908e+01
+07. b15_daaa_env_desvio              | Contraste:   0.5907 | Bona fide:   9.9874e-04 | Spoof:   1.8361e-03
+08. b15_daaa_rms                     | Contraste:   0.5786 | Bona fide:   7.4897e-04 | Spoof:   1.3588e-03
+09. b04_adda_env_curtose             | Contraste:   0.5733 | Bona fide:   3.0035e+01 | Spoof:   5.4172e+01
+10. b04_adda_energia                 | Contraste:   0.5670 | Bona fide:   6.9929e-01 | Spoof:   1.2527e+00
+11. b07_adaa_energia                 | Contraste:   0.5656 | Bona fide:   4.1695e-01 | Spoof:   7.4578e-01
+12. b03_aada_energia                 | Contraste:   0.5507 | Bona fide:   1.3559e+00 | Spoof:   2.3864e+00
+13. b11_ddda_energia                 | Contraste:   0.5386 | Bona fide:   3.1014e-01 | Spoof:   5.3872e-01
+14. b01_aaad_energia                 | Contraste:   0.5255 | Bona fide:   3.5542e+01 | Spoof:   6.0874e+01
+15. b12_dada_energia                 | Contraste:   0.5146 | Bona fide:   2.1238e-01 | Spoof:   3.5953e-01
