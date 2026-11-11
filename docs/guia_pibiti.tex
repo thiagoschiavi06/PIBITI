@@ -1,0 +1,576 @@
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+
+\definecolor{codegray}{gray}{0.95}
+\lstset{
+  backgroundcolor=\color{codegray},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true
+}
+
+\title{\textbf{Guia Completo de Execução do PIBITI}\\
+\large Detecção de deepfakes de áudio em português brasileiro por decomposição Wavelet Packet e descritores estatísticos do contorno de onda das sub-bandas}
+
+\author{Thiago Mateus Schiavi\\Fatec Ourinhos -- ADS}
+\date{2026--2027}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Visão de 5 minutos}
+
+Este manual transforma o Plano de Atividades oficial do PIBITI em um roteiro prático de execução. O projeto tem como núcleo a engenharia de \textit{features}: aplicar Wavelet Packet Transform (WPT), reconstruir sub-bandas no domínio do tempo e extrair descritores estatísticos do contorno de onda.
+
+O núcleo mínimo definido no plano é:
+\begin{itemize}
+    \item nível WPT $L=4$;
+    \item wavelet-mãe db4;
+    \item dois corpora, sendo um de maior porte e BraSpoof-50;
+    \item classificadores GMM e XGBoost;
+    \item avaliação por EER e min-DCF;
+    \item execução em CPU.
+\end{itemize}
+
+O fluxo geral é:
+
+\begin{center}
+Áudio $\rightarrow$ Partição $\rightarrow$ Padronização $\rightarrow$ WPT
+$\rightarrow$ Sub-bandas $\rightarrow$ Reconstrução $\rightarrow$ Features
+$\rightarrow$ Vetor de Features $\rightarrow$ Classificador
+$\rightarrow$ Score $\rightarrow$ EER/min-DCF $\rightarrow$ Análise
+\end{center}
+
+O espaço completo $L\in\{4,5\}\times$ 3 wavelets-mãe $\times$ 4 corpora $\times$ 4 classificadores é uma meta de expansão. A entrega mínima é o núcleo descrito acima.
+
+\section{Como usar este guia}
+
+Há três categorias de informação:
+\begin{description}
+    \item[Definido no plano] aquilo que aparece como atividade, marco ou orientação no documento oficial.
+    \item[Sugestão prática] organização adicional proposta neste guia para facilitar a execução.
+    \item[Conhecimento complementar] explicações técnicas necessárias para compreender ou implementar o projeto.
+\end{description}
+
+Quando o plano não define uma divisão diária ou semanal detalhada, este guia não deve apresentar uma sugestão como se fosse uma exigência oficial.
+
+\section{Cronograma oficial dos 12 meses}
+
+\begin{longtable}{p{1.2cm}p{2.2cm}p{6cm}p{4cm}}
+\toprule
+Mês & Período & Foco principal & Marco/entrega\\
+\midrule
+1 & set/2026 & Fundamentação (wavelet/WPT) + ambientação & Ambiente + repositório Git\\
+2 & out/2026 & Partição + teoria WPT & Partição validada + fichamento\\
+3 & nov/2026 & Revisão + WPT-piloto (reconstrução) & Decomposição WPT funcionando\\
+4 & dez/2026 & Calibração de nível/wavelet + início dos descritores & Sub-bandas + primeiros descritores\\
+5 & jan/2027 & Extração completa dos descritores & Vetor de features do núcleo\\
+6 & fev/2027 & Treino do núcleo + biblioteca v0 + relatório parcial & Relatório parcial + núcleo\\
+7 & mar/2027 & Expansão SVM/RF, db8/sym8, L=5 & Matriz ampliada\\
+8 & abr/2027 & Demais corpora + custo em CPU & Cobertura ampliada + custo\\
+9 & mai/2027 & Avaliação completa + contribuição de sub-bandas & Resultados + análise\\
+10 & jun/2027 & Biblioteca consolidada + repositório + redação & Biblioteca documentada + rascunho\\
+11 & jul/2027 & Submissão + finalização do artefato & Artigo submetido + repositório\\
+12 & ago/2027 & Relatório final + encerramento & Relatório final + apresentação\\
+\bottomrule
+\end{longtable}
+
+\section{Mês 1 -- Fundamentação e ambientação}
+
+\subsection{Semana 1 -- Panorama do problema}
+
+O plano determina o estudo de bona fide versus spoof, protocolos ASVspoof, métricas EER/min-DCF e a criação do repositório Git.
+
+\textbf{Checklist:}
+\begin{itemize}[label=$\square$]
+\item Entender bona fide e spoof.
+\item Entender a finalidade de EER e min-DCF.
+\item Criar o repositório.
+\item Criar data/, splits/, src/, features/, results/ e reports/.
+\item Registrar as primeiras referências.
+\end{itemize}
+
+\subsection{Semana 2 -- Wavelets e Wavelet Packet}
+
+\textbf{Esta é a semana atual.}
+
+O plano determina estudar a árvore de decomposição, nível $L$, wavelet-mãe e o motivo pelo qual a WPT refina todas as sub-bandas.
+
+\textbf{Estudar:}
+\begin{itemize}
+\item conceito de wavelet;
+\item wavelet-mãe;
+\item decomposição;
+\item sub-bandas;
+\item nível $L$;
+\item DWT versus WPT;
+\item árvore WPT.
+\end{itemize}
+
+Para WPT, uma decomposição de nível $L$ produz $2^L$ sub-bandas no nível final. Assim, para $L=4$, o projeto trabalha com 16 sub-bandas.
+
+\textbf{Exercício recomendado:} fazer uma implementação pequena com PyWavelets apenas para observar a árvore e seus nós. Nesta semana, não é necessário processar o corpus inteiro nem treinar classificadores.
+
+\begin{lstlisting}[language=Python]
+import pywt
+import soundfile as sf
+
+audio, sr = sf.read("seu_audio.wav")
+
+wp = pywt.WaveletPacket(
+    data=audio,
+    wavelet="db4",
+    mode="symmetric",
+    maxlevel=4
+)
+
+nodes = wp.get_level(4, order="freq")
+
+print("Quantidade de sub-bandas:", len(nodes))
+
+for i, node in enumerate(nodes):
+    print(i, node.path, len(node.data))
+\end{lstlisting}
+
+\textbf{Resultado esperado:} identificação dos 16 nós/sub-bandas no nível 4.
+
+\subsection{Semana 3 -- Ambiente Python}
+
+O plano prevê pywavelets, numpy, scipy, scikit-learn, xgboost, soundfile e librosa, com execução em CPU.
+
+\begin{lstlisting}
+python -m venv .venv
+.venv\Scripts\activate
+pip install pywavelets numpy scipy scikit-learn xgboost pandas matplotlib soundfile librosa
+pip freeze > requirements.txt
+\end{lstlisting}
+
+\subsection{Semana 4 -- Fichamento e pergunta de pesquisa}
+
+Iniciar o fichamento e registrar a pergunta de pesquisa prevista no plano: se descritores do contorno de onda de sub-bandas WPT associados a ML clássico conseguem detectar fala sintética PT-BR com bom desempenho e baixo custo.
+
+\section{Mês 2 -- Partição e teoria WPT}
+
+\textbf{Objetivo oficial:} garantir uma partição válida e dominar a teoria WPT.
+
+A partição deve ser única e congelada. Deve-se verificar integridade, ausência de vazamento de locutor e balanceamento por corpus.
+
+\textbf{Checklist:}
+\begin{itemize}[label=$\square$]
+\item Verificar/gerar a partição.
+\item Confirmar 16 kHz e mono quando a padronização for responsabilidade do projeto.
+\item Verificar labels.
+\item Verificar speaker leakage.
+\item Confirmar o subconjunto dimensionado para CPU.
+\item Consolidar o fichamento WPT.
+\end{itemize}
+
+\section{Mês 3 -- WPT-piloto e reconstrução}
+
+Implementar WPT configurável e reconstrução das sub-bandas no domínio do tempo com db4.
+
+\textbf{Regra crítica:} validar primeiro com sinais sintéticos conhecidos. Verificar reconstrução quase perfeita, conservação de energia, alinhamento e comprimento. O plano destaca padding e bordas como pontos de atenção.
+
+\section{Mês 4 -- Nível, wavelet e primeiros descritores}
+
+Começar em $L=4$ e preparar a comparação futura entre db4, db8 e sym8. Implementar inicialmente energia/RMS e ZCR.
+
+O envelope deve ser obtido pela transformada de Hilbert; seus descritores incluem média, desvio e curtose.
+
+\section{Mês 5 -- Extração completa}
+
+Implementar, por sub-banda:
+\begin{itemize}
+\item energia/RMS;
+\item ZCR;
+\item envelope: média, desvio e curtose;
+\item entropia;
+\item fator de forma;
+\item fator de crista.
+\end{itemize}
+
+Concatenar os resultados das sub-bandas para produzir um vetor por áudio. Gerar a matriz de features do núcleo e executar sanity checks, incluindo ausência de NaN e reprodutibilidade por seed.
+
+\section{Mês 6 -- Treino do núcleo}
+
+Treinar GMM e XGBoost sobre os vetores do núcleo. Avaliar EER, min-DCF e custo em CPU.
+
+Para min-DCF, o plano fixa:
+\[
+C_{\mathrm{miss}}=1,\qquad C_{\mathrm{fa}}=1,\qquad P_{\mathrm{tar}}=0.05.
+\]
+
+Priorizar EER em razão do desbalanceamento. Entregar relatório parcial, núcleo validado e biblioteca v0.
+
+\section{Mês 7 -- Expansão}
+
+Somente depois de o núcleo estar validado:
+\begin{itemize}
+\item adicionar SVM e Random Forest;
+\item usar StandardScaler para SVM;
+\item testar db8 e sym8;
+\item testar $L=5$;
+\item registrar corpus, nível, wavelet e classificador.
+\end{itemize}
+
+\section{Mês 8 -- Corpora adicionais e CPU}
+
+Incorporar FakeBrAccent, Fake Voices e o que couber dentro do custo computacional. Medir tempo de decomposição, extração, treino, inferência e memória.
+
+\section{Mês 9 -- Avaliação e contribuição das sub-bandas}
+
+Calcular EER e min-DCF para as combinações previstas. Investigar contribuição de sub-bandas e descritores usando feature importance e permutation importance. Produzir curvas DET/ROC e gráficos comparativos.
+
+\section{Mês 10 -- Biblioteca e artigo}
+
+Consolidar a biblioteca WPT + descritores, documentar o repositório, organizar README, environment.yml e resultados. Não redistribuir áudios; manter código, protocolos e resultados agregados.
+
+\section{Mês 11 -- Submissão}
+
+Revisar e submeter o artigo. Congelar biblioteca e repositório, adicionar LICENSE e CITATION.cff quando aplicável e verificar licenças dos corpora/modelos.
+
+\section{Mês 12 -- Relatório final}
+
+Redigir objetivos alcançados, metodologia, resultados por corpus/nível/wavelet, análise de sub-bandas, custo em CPU, limitações e trabalhos futuros. Preparar apresentação/pôster.
+
+\section{Fundamentos de áudio}
+
+O pipeline deve padronizar os dados conforme o escopo do projeto. O plano cita 16 kHz e mono na frente de partição/padronização.
+
+Exemplo de verificação:
+
+\begin{lstlisting}[language=Python]
+import soundfile as sf
+
+audio, sr = sf.read("audio.wav")
+
+print("Sample rate:", sr)
+print("Shape:", audio.shape)
+print("Canais:", 1 if audio.ndim == 1 else audio.shape[1])
+print("Amostras:", len(audio))
+print("Duracao:", len(audio) / sr, "segundos")
+\end{lstlisting}
+
+\section{WPT em detalhes}
+
+A WPT organiza a decomposição em uma árvore. Em nível 4, há 16 sub-bandas finais:
+
+\[
+2^4=16.
+\]
+
+A utilização de WPT permite refinar todas as sub-bandas, em contraste com a decomposição convencional que não mantém essa mesma expansão completa.
+
+A implementação inicial deve usar db4 e permitir que o nível seja configurável.
+
+\section{Reconstrução}
+
+Cada sub-banda deve ser reconstruída no domínio do tempo. Antes de aplicar o método a grandes corpora, testar:
+\begin{enumerate}
+\item sinal sintético;
+\item decomposição;
+\item reconstrução;
+\item comparação com o sinal original;
+\item erro de reconstrução;
+\item comprimento;
+\item energia;
+\item comportamento nas bordas.
+\end{enumerate}
+
+\section{Features}
+
+\subsection{RMS e energia}
+
+Para uma sequência $x[n]$ com $N$ amostras:
+\[
+RMS=\sqrt{\frac{1}{N}\sum_{n=1}^{N}x[n]^2}.
+\]
+
+A energia pode ser calculada como:
+\[
+E=\sum_{n=1}^{N}x[n]^2.
+\]
+
+\subsection{ZCR}
+
+A taxa de cruzamentos por zero mede a frequência com que o sinal muda de sinal.
+
+\subsection{Envelope de Hilbert}
+
+O sinal analítico pode ser obtido por Hilbert. O envelope é a magnitude desse sinal analítico. O plano determina extrair média, desvio e curtose do envelope.
+
+\subsection{Entropia}
+
+A entropia é usada como descritor e aparece também no contexto de seleção de base WPT.
+
+\subsection{Fator de forma}
+
+O fator de forma é relacionado à razão entre RMS e média retificada, conforme a definição adotada e documentada na implementação.
+
+\subsection{Fator de crista}
+
+\[
+CF=\frac{\max |x[n]|}{RMS}.
+\]
+
+\section{Vetor de features}
+
+O princípio é:
+
+\[
+1\ \text{áudio} \rightarrow 16\ \text{sub-bandas}
+\rightarrow \text{descritores} \rightarrow 1\ \text{vetor}.
+\]
+
+A quantidade exata de colunas deve ser determinada a partir dos descritores efetivamente implementados e documentada. Não se deve assumir uma dimensão diferente sem registrar a decisão.
+
+\section{Machine Learning}
+
+\subsection{GMM}
+
+O núcleo prevê dois modelos, bona fide e spoof, e uma razão de verossimilhança para produzir score.
+
+\subsection{XGBoost}
+
+XGBoost será usado como classificador do núcleo. Seus hiperparâmetros e seed devem ser registrados.
+
+\subsection{Expansão}
+
+SVM e Random Forest pertencem à expansão do mês 7. A padronização é especialmente importante para SVM.
+
+\section{Métricas}
+
+O projeto deve priorizar EER e min-DCF, não acurácia.
+
+\subsection{EER}
+
+EER é o ponto em que, de forma aproximada, taxas de erro de falso aceite e falsa rejeição se encontram. O valor deve ser calculado a partir dos scores e rótulos de teste, respeitando a partição.
+
+\subsection{min-DCF}
+
+Usar os parâmetros definidos no plano:
+\[
+C_{\mathrm{miss}}=C_{\mathrm{fa}}=1,\quad P_{\mathrm{tar}}=0.05.
+\]
+
+\section{Desempenho em CPU}
+
+Registrar:
+\begin{itemize}
+\item tempo de leitura;
+\item tempo de WPT;
+\item tempo de reconstrução;
+\item tempo de extração;
+\item tempo de treino;
+\item tempo de inferência;
+\item memória.
+\end{itemize}
+
+O plano recomenda medir custo em CPU desde o início.
+
+\section{Registro de experimentos}
+
+Sugestão prática de tabela:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Campo & Valor\\
+\midrule
+Data & \\
+Corpus & \\
+Wavelet & \\
+Nível & \\
+Modo de borda & \\
+Classificador & \\
+Seed & \\
+Áudios & \\
+Features & \\
+Tempo & \\
+Memória & \\
+EER & \\
+min-DCF & \\
+Observações & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Estrutura recomendada do projeto}
+
+\begin{lstlisting}
+PIBITI/
+|-- data/
+|-- splits/
+|-- src/
+|-- features/
+|-- results/
+|-- reports/
+|-- tests/
+|-- notebooks/
+|-- README.md
+|-- requirements.txt
+\-- .gitignore
+\end{lstlisting}
+
+Não colocar áudios dos corpora no repositório público quando as licenças/regras não permitirem sua redistribuição.
+
+\section{Troubleshooting}
+
+\begin{longtable}{p{3cm}p{4cm}p{7cm}}
+\toprule
+Sintoma & Possível causa & Diagnóstico/ação\\
+\midrule
+NaN nas features & Entrada inválida ou cálculo degenerado & Verificar áudio, intermediários e tratar casos explicitamente.\\
+Reconstrução diferente & Padding/borda/alinhamento & Testar sinal sintético e registrar modo de borda.\\
+Processamento lento & Corpus grande ou configuração pesada & Testar subconjunto, medir CPU e usar cache.\\
+Memória insuficiente & Processamento em lote grande & Processar em lotes e salvar resultados intermediários.\\
+Speaker leakage & Partição inadequada & Verificar locutor entre treino/validação/teste.\\
+Resultados não reprodutíveis & Seed/configuração não registrada & Registrar seed, parâmetros e versão do ambiente.\\
+\bottomrule
+\end{longtable}
+
+\section{Documentação semanal}
+
+Sugestão de diário:
+
+\begin{center}
+\begin{tabular}{p{2cm}p{3cm}p{4cm}p{3cm}}
+\toprule
+Data & Atividade & Resultado & Próximo passo\\
+\midrule
+& & &\\
+& & &\\
+& & &\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Relatório parcial}
+
+Ao final do mês 6, o plano prevê relatório parcial e núcleo validado. Uma estrutura prática é:
+\begin{enumerate}
+\item Introdução;
+\item Objetivos;
+\item Referencial teórico;
+\item Metodologia;
+\item Corpora e partição;
+\item WPT;
+\item Descritores;
+\item GMM e XGBoost;
+\item Métricas;
+\item Resultados;
+\item Discussão;
+\item Limitações;
+\item Próximos passos.
+\end{enumerate}
+
+\section{Relatório final e apresentação}
+
+O relatório final deve consolidar objetivos, metodologia, resultados, análise de sub-bandas, custo em CPU, limitações e trabalhos futuros. A apresentação deve mostrar problema, motivação, objetivo, metodologia, dados, WPT, features, classificadores, resultados e conclusão.
+
+\section{Checklist geral}
+
+\begin{itemize}[label=$\square$]
+\item Ambiente reprodutível.
+\item Repositório Git.
+\item Bibliografia/fichamento.
+\item Partição validada e congelada.
+\item WPT db4 L=4 funcionando.
+\item Reconstrução validada.
+\item Features implementadas.
+\item Matriz de features.
+\item GMM.
+\item XGBoost.
+\item EER.
+\item min-DCF.
+\item Custo em CPU.
+\item Expansão SVM/RF/db8/sym8/L=5.
+\item Análise de sub-bandas.
+\item Biblioteca documentada.
+\item Artigo.
+\item Relatório final.
+\item Apresentação.
+\end{itemize}
+
+\section{O que fazer AGORA -- Mês 1, Semana 2}
+
+\textbf{Hoje}
+\begin{itemize}
+\item Estudar o conceito de wavelet.
+\item Entender wavelet-mãe.
+\item Entender sub-bandas.
+\item Entender DWT e WPT.
+\end{itemize}
+
+\textbf{Amanhã}
+\begin{itemize}
+\item Estudar árvore WPT.
+\item Entender o nível $L$.
+\item Confirmar por que $L=4$ produz 16 sub-bandas.
+\item Fazer o pequeno teste com PyWavelets.
+\end{itemize}
+
+\textbf{Depois}
+\begin{itemize}
+\item Registrar o que aprendeu no fichamento.
+\item Desenhar a árvore WPT.
+\item Salvar o código de teste no repositório.
+\item Registrar dúvidas para a reunião com o orientador.
+\end{itemize}
+
+\textbf{Ainda não fazer:}
+\begin{itemize}
+\item não treinar GMM;
+\item não treinar XGBoost;
+\item não calcular EER como etapa principal;
+\item não processar o corpus inteiro apenas para testar a WPT;
+\item não começar a expansão db8/sym8/L=5.
+\end{itemize}
+
+O critério prático para terminar a Semana 2 é conseguir explicar claramente o que é WPT, como funciona a árvore, o que significa $L$, por que $L=4$ gera 16 sub-bandas e como localizar essas sub-bandas com PyWavelets.
+
+\section{Boas práticas permanentes}
+
+O plano determina:
+\begin{itemize}
+\item validar a reconstrução antes de tudo;
+\item manter uma partição única e congelada;
+\item extrair features uma vez e reutilizar cache;
+\item registrar nível, wavelet e borda;
+\item medir custo em CPU;
+\item versionar o trabalho em Git;
+\item registrar corpus, nível, wavelet, classificador, seeds, métricas e tempos;
+\item não misturar validação e teste;
+\item respeitar split por locutor;
+\item priorizar EER/min-DCF;
+\item realizar reuniões quinzenais com o orientador;
+\item escrever o relatório em paralelo ao trabalho.
+\end{itemize}
+
+\end{document}
