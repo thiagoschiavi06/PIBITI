@@ -1,0 +1,123 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{booktabs,tabularx,array}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\geometry{left=2.6cm,right=2.6cm,top=2.5cm,bottom=2.5cm}
+\hypersetup{colorlinks=true,urlcolor=blue!50!black,linkcolor=black,pdftitle={Relatorio mensal PIBITI - Novembro 2026}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist[itemize]{leftmargin=*,topsep=3pt,itemsep=2pt}
+\newcommand{\subtitulo}[1]{\vspace{4pt}{\large\bfseries #1}\par\vspace{2pt}}
+
+\begin{document}
+\begin{center}
+{\small FATEC OURINHOS}\par
+\vspace{0.4cm}
+{\Large\bfseries Relatório Mensal de Atividades}\par
+\vspace{0.18cm}
+{\large PIBITI --- Novembro de 2026 (Mês 3)}\par
+\vspace{0.6cm}
+\end{center}
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\textbf{Pesquisador:} & Thiago Mateus Schiavi\\
+\textbf{Orientador:} & Prof. Dr. Alex Marino Gonçalves de Almeida\\
+\textbf{Instituição:} & Fatec Ourinhos\\
+\textbf{Projeto:} & Detecção de deepfakes de áudio em português brasileiro por decomposição Wavelet Packet e descritores estatísticos do contorno de onda das sub-bandas\\
+\textbf{Período:} & Novembro de 2026\\
+\textbf{Natureza:} & Relatório de acompanhamento para revisão do orientador\\
+\end{tabularx}
+\vspace{0.35cm}
+
+\section{Objetivo do período}
+Conforme o planejamento oficial do PIBITI, o terceiro mês (\emph{WPT-Piloto: Decomposição e Reconstrução}) é uma etapa metodológica crítica destinada a garantir a operacionalidade rigorosa da Wavelet Packet Transform (WPT). O objetivo central é consolidar um módulo reutilizável de processamento, validar exaustivamente a quase-perfeita reconstrução temporal do sinal e a conservação de energia em nível $L=4$ com a wavelet-mãe \texttt{db4}, tanto em sinais sintéticos determinísticos quanto em amostras reais de fala, além de concluir o mapeamento da diversidade de modelos sintéticos do corpus BRSpeech-DF.
+
+\section{Atividades desenvolvidas}
+
+\subtitulo{2.1 Conclusão do inventário dos modelos sintéticos (BRSpeech-DF)}
+Foi finalizada a varredura completa dos \textbf{288 arquivos Parquet} da partição de fala sintética (\emph{spoof}) do corpus BRSpeech-DF (274 em treino, 7 em validação e 7 em teste), por meio do script \texttt{20\_inventario\_modelos\_sintese.py}. Foram catalogados \textbf{382.493 registros sintéticos}, distribuídos equilibradamente entre cinco sintetizadores distintos:
+
+\begin{center}
+\begin{tabular}{lrrrr}\toprule
+\textbf{Modelo de Síntese} & \textbf{Treino} & \textbf{Validação} & \textbf{Teste} & \textbf{Total}\\\midrule
+F5-TTS & 73.949 & 1.158 & 1.316 & 76.423\\
+Fish-Speech & 73.949 & 1.158 & 1.315 & 76.422\\
+ToucanTTS & 74.163 & 1.161 & 1.320 & 76.644\\
+XTTS & 74.101 & 1.160 & 1.320 & 76.581\\
+YourTTS & 73.949 & 1.158 & 1.316 & 76.423\\\midrule
+\textbf{Total} & \textbf{370.111} & \textbf{5.795} & \textbf{6.587} & \textbf{382.493}\\\bottomrule
+\end{tabular}
+\end{center}
+
+Este mapeamento resolve a lacuna de representatividade do piloto inicial (que continha exclusivamente amostras do F5-TTS) e fornece a base para desenhar uma partição piloto equilibrada entre os cinco geradores para as etapas subsequentes.
+
+\subtitulo{2.2 Módulo modular de WPT e validação com sinais sintéticos}
+Foi estruturado o módulo central \texttt{src/utils\_wpt.py}, implementando funções documentadas para decomposição, reconstrução global, reconstrução temporal individualizada de sub-bandas com ordenação por frequência (\texttt{order="freq"}) e tratamento de bordas simétrico (\texttt{mode="symmetric"}).
+
+No script \texttt{23\_validar\_reconstrucao\_sintetica.py}, realizou-se a bateria de testes com \textbf{7 sinais sintéticos determinísticos} de 1,0 s (16.000 amostras a 16 kHz): senoide pura de 440 Hz, duas senoides (440 e 2.200 Hz), ruído gaussiano branco, senoide ruidosa, impulso unitário, sinal constante (DC) e sinal trifrequencial (200, 1.500 e 6.000 Hz, correspondente ao Desafio Final do Mês 3).
+
+\begin{center}\small
+\begin{tabular}{lrrrr}\toprule
+\textbf{Sinal Sintético} & \textbf{Decomp. (ms)} & \textbf{Rec. 16 B. (ms)} & \textbf{MSE Soma Bandas} & \textbf{Equiv. Numérica}\\\midrule
+Senoide 440 Hz & 0,05 & 8,78 & $7,41 \times 10^{-32}$ & \textbf{True} ($<10^{-10}$)\\
+Duas Senoides & 0,02 & 6,45 & $1,28 \times 10^{-31}$ & \textbf{True} ($<10^{-10}$)\\
+Ruído Gaussiano & 0,02 & 6,44 & $1,54 \times 10^{-31}$ & \textbf{True} ($<10^{-10}$)\\
+Senoide + Ruído & 0,02 & 7,15 & $8,96 \times 10^{-32}$ & \textbf{True} ($<10^{-10}$)\\
+Impulso Unitário & 0,09 & 7,16 & $3,87 \times 10^{-36}$ & \textbf{True} ($<10^{-10}$)\\
+Sinal Constante (DC) & 0,02 & 5,48 & $1,16 \times 10^{-31}$ & \textbf{True} ($<10^{-10}$)\\
+Três Senoides & 0,01 & 5,87 & $2,26 \times 10^{-31}$ & \textbf{True} ($<10^{-10}$)\\\bottomrule
+\end{tabular}
+\end{center}
+
+A soma temporal das 16 sub-bandas recuperou integralmente o sinal original com erro quadrático médio na ordem de $10^{-31}$ a $10^{-36}$ e erro máximo absoluto na ordem de $10^{-15}$, no limite da precisão IEEE 754 de 64 bits. A resposta em frequência atestou a separação esperada: 69,4\% da energia do tom de 440 Hz concentrou-se na Banda 0 (0--500 Hz) e 100\% do nível DC permaneceu na Banda 0.
+
+\subtitulo{2.3 Validação da reconstrução em gravações reais de fala}
+Por meio do script \texttt{24\_validar\_reconstrucao\_audios\_reais.py}, estendeu-se a verificação a \textbf{30 gravações reais de voz humana} (5 reais e 5 sintéticas por partição) do BRSpeech-DF, abrangendo durações de 0,8 s a 20,0 s.
+
+Os resultados confirmaram \textbf{100\% de taxa de equivalência numérica perfeita} (\texttt{atol=1e-10}) em todas as gravações. O erro quadrático médio médio foi de $\mathbf{4{,}91\times 10^{-34}}$ e o erro máximo absoluto pontual não ultrapassou $6{,}66\times 10^{-16}$. O custo computacional médio em CPU foi de apenas \textbf{43,0 ms por áudio completo} (decomposição e reconstrução das 16 sub-bandas), confirmando que a abordagem é plenamente factível em CPU comum.
+
+\subtitulo{2.4 Ensaios exploratórios de extração de características}
+Nos scripts \texttt{21} e \texttt{22}, foi executada uma extração preliminar em lote sobre 522 áudios com duração superior a 4 s (janela central de 64.000 amostras), calculando energia relativa, entropia de Shannon, RMS e desvio padrão. Os gráficos de medianas foram consolidados em \texttt{reports/experimentos\_wpt\_mes3/}. Conforme documentado no relatório técnico preliminar, tais ensaios são estritamente exploratórios e não constituem evidência preditiva de detecção.
+
+\section{Produções do período}
+\begin{itemize}
+\item Módulo reutilizável \texttt{src/utils\_wpt.py} com funções testadas e documentadas.
+\item Scripts de validação da reconstrução WPT: \texttt{23\_validar\_reconstrucao\_sintetica.py} e \texttt{24\_validar\_reconstrucao\_audios\_reais.py}.
+\item Tabelas e relatórios textuais de auditoria numérica em \texttt{results/}.
+\item Gráficos de alta resolução de validação sintética e em fala real em \texttt{reports/experimentos\_wpt\_mes3/figuras/}.
+\item Inventário completo dos modelos sintéticos versionado em \texttt{data/metadados/inventario\_modelos\_sintese.csv}.
+\item Repositório e documentação atualizados: \url{https://github.com/thiagoschiavi06/PIBITI}.
+\end{itemize}
+
+\section{Limitações e pontos para orientação}
+\begin{itemize}
+\item O conjunto local de áudios do piloto ainda é composto exclusivamente por amostras F5-TTS na classe \emph{spoof}; propõe-se para a próxima etapa a composição de uma amostra balanceada contemplando os cinco sintetizadores.
+\item A extração exploratória inicial (script 21) operou sobre os coeficientes da árvore WPT; o plano oficial prevê que as características finais do núcleo sejam descritores estatísticos do contorno de onda das sub-bandas \emph{reconstruídas no domínio do tempo}.
+\item O tratamento de bordas \texttt{symmetric} revelou excelente conservação, mas acarreta expansão de amostras; a estratégia de corte ao comprimento original foi padronizada no módulo \texttt{utils\_wpt.py}.
+\end{itemize}
+
+\section{Encaminhamentos para dezembro (Mês 4)}
+\begin{itemize}
+\item Calibração do nível de decomposição ($L=4$ versus $L=5$) e comparação preliminar com as famílias \texttt{db8} e \texttt{sym8}.
+\item Implementação formal dos primeiros descritores estatísticos do contorno de onda temporal: energia, RMS, taxa de cruzamentos por zero (ZCR) e envelope analítico obtido via Transformada de Hilbert (média, desvio e curtose).
+\item Estruturação da partição piloto estratificada multi-modelo (20 áudios de cada um dos 5 geradores por partição).
+\end{itemize}
+
+\section{Síntese}
+O terceiro mês atinge integralmente seu objetivo: a decomposição e a reconstrução WPT com \texttt{db4} em 16 sub-bandas foram exaustivamente validadas em CPU, provando reversibilidade quase-perfeita (MSE da ordem de $10^{-34}$) em sinais sintéticos e em fala real, com custo computacional reduzido. O inventário dos modelos sintéticos foi concluído, estabelecendo a base para a extração dos descritores temporais prevista para o Mês 4.
+
+\section*{Materiais utilizados}
+\begin{itemize}
+\item Plano de Atividades PIBITI 2026--2027, \emph{Mês 3 --- Revisão + WPT-piloto (reconstrução)}.
+\item Guia Específico do Mês 3: \emph{WPT-Piloto: Decomposição e Reconstrução}, Fatec Ourinhos.
+\item Módulo \texttt{utils\_wpt.py} e resultados dos scripts 20, 23 e 24.
+\item Corpus: \url{https://huggingface.co/datasets/AKCIT-Deepfake/BRSpeech-DF}.
+\end{itemize}
+\end{document}

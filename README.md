@@ -118,6 +118,7 @@ python -c "import numpy, pandas, scipy, soundfile, pywt, matplotlib, pyarrow, hu
 | `21_extrair_features_wpt.py` | Extração em lote de 64 características WPT (janela 4s, 522 áudios) |
 | `22_graficos_features_wpt.py` | Geração de gráficos de medianas e consolidação de resumo por partição |
 | `23_validar_reconstrucao_sintetica.py` | Bateria exaustiva de validação da reconstrução WPT com sinais sintéticos |
+| `24_validar_reconstrucao_audios_reais.py` | Validação da reconstrução WPT e custo em CPU com áudios de fala do piloto |
 
 Exemplos com áudios já preparados localmente:
 

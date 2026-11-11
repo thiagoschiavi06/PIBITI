@@ -1,0 +1,22 @@
+RELATÓRIO DE VALIDAÇÃO DA RECONSTRUÇÃO WPT EM ÁUDIOS REAIS DE FALA
+Data: 2026-11-11 08:13:50
+Configuração WPT: Wavelet=db4, Nível=4, Modo=symmetric, Ordem=freq
+Corpus: BRSpeech-DF (Piloto processado 16 kHz mono)
+Total de áudios analisados: 30
+===========================================================================
+
+SÍNTESE DOS RESULTADOS:
+- Taxa de equivalência numérica perfeita (atol=1e-10): 100.0% (30/30)
+- MSE médio (soma das 16 sub-bandas): 4.86e-34
+- MSE máximo observado: 7.91e-34
+- Erro absoluto máximo observado em qualquer amostra: 6.66e-16
+- Tempo médio de CPU por áudio (decomposição + 16 reconstruções): 44.06 ms
+---------------------------------------------------------------------------
+
+DETALHAMENTO POR CLASSE E PARTIÇÃO:
+  * test       - bonafide: MSE médio = 4.99e-34 | CPU médio = 87.1 ms | Duração média = 15.10 s
+  * test       - spoof   : MSE médio = 6.44e-34 | CPU médio = 78.4 ms | Duração média = 14.45 s
+  * train      - bonafide: MSE médio = 3.41e-34 | CPU médio = 34.6 ms | Duração média = 6.41 s
+  * train      - spoof   : MSE médio = 5.52e-34 | CPU médio = 26.0 ms | Duração média = 6.30 s
+  * validation - bonafide: MSE médio = 3.40e-34 | CPU médio = 15.1 ms | Duração média = 3.74 s
+  * validation - spoof   : MSE médio = 5.41e-34 | CPU médio = 23.2 ms | Duração média = 3.79 s
