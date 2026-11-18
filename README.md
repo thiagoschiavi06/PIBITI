@@ -121,6 +121,8 @@ python -c "import numpy, pandas, scipy, soundfile, pywt, matplotlib, pyarrow, hu
 | `24_validar_reconstrucao_audios_reais.py` | Validação da reconstrução WPT e custo em CPU com áudios de fala do piloto |
 | `25_calibrar_nivel_wavelet.py` | Calibração sistemática de nível (L=3,4,5) e wavelets (db4, db8, sym8) |
 | `26_extrair_descritores_iniciais.py` | Extração dos primeiros 96 descritores (6 por sub-banda WPT) e contraste |
+| `27_extrair_features_96_lote.py` | Extração em lote dos 96 descritores nos 522 áudios da base piloto |
+| `28_graficos_descritores_mes4.py` | Geração de gráficos por sub-banda e análise de consistência Treino-Validação |
 
 Exemplos com áudios já preparados localmente:
 

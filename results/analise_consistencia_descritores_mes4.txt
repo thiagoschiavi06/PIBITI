@@ -1,0 +1,29 @@
+ANALISE DE CONSISTENCIA DAS 96 CARACTERISTICAS WPT (MES 4)
+Data: 2026-11-18 10:18:53
+Total de caracteristicas analisadas: 96
+Total de audios: 522 (Train: 162, Val: 175, Test: 185)
+Consistencia de sinal entre Treino e Validacao: 89.58% (86/96)
+================================================================================
+
+TOP 20 CARACTERISTICAS COM MAIOR CONTRASTE NO TREINO E STATUS NA VALIDACAO:
+--------------------------------------------------------------------------------
+01. b15_daaa_energia               | Contraste:  1.0501 | Tr: - (-1.276e-01) | Val: - (-6.035e-03) | Consistente: SIM
+02. b14_daad_energia               | Contraste:  0.9369 | Tr: - (-2.734e-01) | Val: - (-6.425e-02) | Consistente: SIM
+03. b06_adad_energia               | Contraste:  0.7336 | Tr: - (-5.899e-01) | Val: - (-2.976e-01) | Consistente: SIM
+04. b02_aadd_energia               | Contraste:  0.6431 | Tr: - (-5.135e+00) | Val: - (-1.416e+01) | Consistente: SIM
+05. b12_dada_energia               | Contraste:  0.6134 | Tr: - (-2.811e-01) | Val: - (-6.635e-01) | Consistente: SIM
+06. b01_aaad_energia               | Contraste:  0.6107 | Tr: - (-3.104e+01) | Val: - (-3.849e+01) | Consistente: SIM
+07. b05_addd_energia               | Contraste:  0.6084 | Tr: - (-4.574e-01) | Val: - (-6.286e-01) | Consistente: SIM
+08. b13_dadd_energia               | Contraste:  0.5950 | Tr: - (-1.869e-01) | Val: - (-2.826e-01) | Consistente: SIM
+09. b11_ddda_energia               | Contraste:  0.5882 | Tr: - (-3.868e-01) | Val: - (-6.462e-01) | Consistente: SIM
+10. b15_daaa_env_desvio            | Contraste:  0.5848 | Tr: - (-1.057e-03) | Val: - (-2.245e-04) | Consistente: SIM
+11. b15_daaa_rms                   | Contraste:  0.5673 | Tr: - (-7.521e-04) | Val: - (-1.645e-04) | Consistente: SIM
+12. b07_adaa_energia               | Contraste:  0.5670 | Tr: - (-3.398e-01) | Val: - (-1.515e-01) | Consistente: SIM
+13. b00_aaaa_env_curtose           | Contraste:  0.5045 | Tr: - (-6.424e-01) | Val: - (-3.720e-01) | Consistente: SIM
+14. b00_aaaa_energia               | Contraste:  0.4978 | Tr: - (-7.369e+01) | Val: - (-3.013e+01) | Consistente: SIM
+15. b14_daad_rms                   | Contraste:  0.4974 | Tr: - (-1.031e-03) | Val: - (-5.043e-04) | Consistente: SIM
+16. b14_daad_env_desvio            | Contraste:  0.4966 | Tr: - (-1.392e-03) | Val: - (-7.154e-04) | Consistente: SIM
+17. b07_adaa_env_curtose           | Contraste:  0.4641 | Tr: - (-2.398e+01) | Val: - (-8.758e+00) | Consistente: SIM
+18. b15_daaa_env_media             | Contraste:  0.4613 | Tr: - (-2.581e-04) | Val: - (-8.372e-05) | Consistente: SIM
+19. b14_daad_env_media             | Contraste:  0.4437 | Tr: - (-3.723e-04) | Val: - (-2.343e-04) | Consistente: SIM
+20. b08_ddaa_energia               | Contraste:  0.4425 | Tr: - (-2.497e-01) | Val: - (-1.116e-01) | Consistente: SIM
